@@ -3,41 +3,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calculator</title>
+  <title>Library Inventory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <div class="calculator">
-    <div class="display">
-      <span id="display">0</span>
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="header">
+      <div class="header-text">
+        <h1 class="logo-title">Library Inventory</h1>
+        <p class="logo-sub">Keep books and films moving through the community. Add new items, update their details, and track what is ready to borrow.</p>
+      </div>
+    </header>
+
+    <!-- Global Notification / Error Display Area -->
+    <div id="notification-area" class="notification-area" style="display: none;">
+      <div class="notification-content">
+        <span class="notification-icon" id="notification-icon">⚠️</span>
+        <div class="notification-text">
+          <strong id="notification-title">Error</strong>
+          <span id="notification-message"></span>
+        </div>
+      </div>
+      <button class="notification-close" id="notification-close" aria-label="Close notification">&times;</button>
     </div>
-    <div class="buttons">
-      <div class="row">
-        <button class="btn num" data-val="7">7</button>
-        <button class="btn num" data-val="8">8</button>
-        <button class="btn num" data-val="9">9</button>
-        <button class="btn op" data-val="÷">÷</button>
-      </div>
-      <div class="row">
-        <button class="btn num" data-val="4">4</button>
-        <button class="btn num" data-val="5">5</button>
-        <button class="btn num" data-val="6">6</button>
-        <button class="btn op" data-val="×">×</button>
-      </div>
-      <div class="row">
-        <button class="btn num" data-val="1">1</button>
-        <button class="btn num" data-val="2">2</button>
-        <button class="btn num" data-val="3">3</button>
-        <button class="btn op" data-val="-">−</button>
-      </div>
-      <div class="row">
-        <button class="btn num" data-val="0">0</button>
-        <button class="btn num" data-val=".">.</button>
-        <button class="btn op equal" data-val="=">=</button>
-        <button class="btn op" data-val="+">+</button>
-      </div>
+
+    <!-- Main Grid Layout -->
+    <div class="main-layout">
+      
+      <!-- Left Column: Add / Edit Item Form -->
+      <aside class="panel add-panel">
+        <div class="section-tag" id="form-section-tag">NEW RECORD</div>
+        <h2 class="section-title" id="form-title">Add an item</h2>
+        <p class="section-desc" id="form-desc">Enter the details below to add it to the collection.</p>
+
+        <form id="item-form" class="item-form">
+          <input type="hidden" id="edit-item-id" value="">
+
+          <div class="form-group">
+            <label for="item-title">Title</label>
+            <input type="text" id="item-title" placeholder="e.g. The Left Hand of Darkness" required />
+          </div>
+
+          <div class="form-group">
+            <label for="item-author">Author or director</label>
+            <input type="text" id="item-author" placeholder="e.g. Ursula K. Le Guin" required />
+          </div>
+
+          <div class="form-group" id="type-group">
+            <label>Type</label>
+            <div class="segmented-control" id="type-selector">
+              <button type="button" class="segment active" data-type="book">Book</button>
+              <button type="button" class="segment" data-type="dvd">DVD</button>
+            </div>
+          </div>
+
+          <div class="form-group" id="dynamic-field-group">
+            <label for="item-metric" id="metric-label">Page count</label>
+            <div class="input-with-suffix">
+              <input type="number" id="item-metric" min="1" placeholder="1" required />
+              <span class="input-suffix" id="metric-suffix">pages</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submit-btn">
+              <span id="submit-btn-text">Add to library</span>
+              <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display: none;">Cancel</button>
+          </div>
+        </form>
+      </aside>
+
+      <!-- Right Column: Catalog Listing -->
+      <section class="panel catalog-panel">
+        <div class="catalog-header">
+          <div>
+            <div class="section-tag">CATALOG</div>
+            <h2 class="catalog-count"><span id="item-count">0</span> items</h2>
+          </div>
+
+          <div class="catalog-filters">
+            <!-- Filter Pills -->
+            <div class="segmented-control pill-control">
+              <button class="filter-tab active" data-filter-type="all">All</button>
+              <button class="filter-tab" data-filter-type="book">Book</button>
+              <button class="filter-tab" data-filter-type="dvd">DVD</button>
+            </div>
+
+            <!-- Available Only Toggle -->
+            <label class="toggle-switch">
+              <input type="checkbox" id="available-toggle">
+              <span class="slider"></span>
+              <span class="toggle-label">Available only</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Items Container -->
+        <div id="items-list" class="items-list">
+          <div class="loading-state">Loading library collection...</div>
+        </div>
+      </section>
+
     </div>
   </div>
+
   <script src="/static/script.js"></script>
 </body>
 </html>

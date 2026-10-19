@@ -1,10 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from custom_classes import (
     Book, DVD, LibraryCollection,
     ItemNotFoundError, ItemStateError
 )
 
 app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 # --- One shared LibraryCollection instance, seeded with mixed items ---
 library = LibraryCollection()
